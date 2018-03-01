@@ -1,0 +1,43 @@
+[user]
+	name = Thibault
+	email = tmarion90@gmail.com
+
+[color]
+  branch = auto
+  diff = auto
+  status = auto
+
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+
+[core]
+	editor = vim
+	tagopt = --tags
+	autocrlf = false
+
+[alias]
+	st = status -suno
+	l = log --oneline --graph
+	la = log --oneline --graph --all --decorate
+	b = branch -v
+	ba = branch -av
+	co = checkout
+  	ci = commit
+#[push]
+#	default = simple
+
+[diff "odf"]
+      textconv=odt2txt
