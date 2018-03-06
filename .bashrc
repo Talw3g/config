@@ -106,3 +106,5 @@ fi
 alias ll='ls -lh'
 alias la='ls -lah'
 alias fake_dhcp='sudo dnsmasq -d --log-dhcp --bind-dynamic --log-facility=- -i eth0 -F 10.0.0.100,10.0.0.200'
+
+export PATH="$HOME/.cargo/bin:$PATH"

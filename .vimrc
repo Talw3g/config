@@ -6,7 +6,7 @@ set nocompatible
 
 "____________________________
 " aspect
-syntax on
+syntax enable
 set vb
 set ruler
 " affiches les paires de () [] {}
@@ -108,7 +108,7 @@ let Tlist_GainFocus_On_ToggleOpen = 1
 "____________________________
 " default colorscheme
 
-colorscheme jdam
+colorscheme smyck
 
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
@@ -128,3 +128,4 @@ set noshowmode
 let g:lightline = {
       \ 'colorscheme': 'wombat',
       \ }
+
