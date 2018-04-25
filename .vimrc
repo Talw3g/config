@@ -25,6 +25,7 @@ set shiftwidth=2
 
 " prog
 autocmd BufNewfile,BufRead {SConstruct,SConscript,*.{c,cc,cpp,h,hpp,html,htm,php,css,lisp,py,pl,ml,sh,js,vhd,xml}} set expandtab | set shiftwidth=2
+autocmd BufNewfile,BufRead {SConstruct,SConscript,*.{md}} set expandtab | set tabstop=4 | set shiftwidth=4
 autocmd BufNewfile,BufRead Makefile set noexpandtab
 autocmd BufNewfile,Bufread *.php let php_sql_query=1 | let php_baselib=1 | let php_htmlInStrings=1 | let php_parent_error_close=1 | let php_parent_error_open=1
 autocmd BufNewfile,BufRead {SConstruct,SConscript,*.{py}} cnoreab wc w<CR>:!python3 -m py_compile %
