@@ -93,7 +93,7 @@ map <A-RIGHT> <C-w><RIGHT>
 
 nnoremap <Space> :tabnew<CR>
 noremap <silent> <F4> :TlistToggle<CR>
-
+nmap ds daw
 map <F5> <ESC>:!git grep <C-r><C-w><CR>
 
 map <C-n> :NERDTreeToggle<CR>
