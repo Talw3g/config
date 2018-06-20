@@ -30,6 +30,7 @@ autocmd BufNewfile,BufRead Makefile set noexpandtab
 autocmd BufNewfile,Bufread *.php let php_sql_query=1 | let php_baselib=1 | let php_htmlInStrings=1 | let php_parent_error_close=1 | let php_parent_error_open=1
 autocmd BufNewfile,BufRead {SConstruct,SConscript,*.{py}} cnoreab wc w<CR>:!python3 -m py_compile %
 autocmd BufNewfile,BufRead {SConstruct,SConscript,*.{rs}} cnoreab wc w<CR>:!cargo build | cnoreab wr w<CR>:!cargo run
+autocmd BufNewfile,BufRead {SConstruct,SConscript,*.{tex}} cnoreab wc w<CR>:!pdflatex -interaction=nonstopmode % | cnoreab rr <CR>:! rm *.aux *.log *.out *.synctex.gz *.bbl *.blg *.dvi >/dev/null 2>&1 <CR> | nmap <C-d> di{| imap <C-d> <ESC>di{i| imap <UP> <ESC>gki| imap <DOWN> <ESC>gji
 
 "____________________________
 " recherches
@@ -122,6 +123,7 @@ autocmd BufWinLeave * call clearmatches()
 call pathogen#infect()
 
 let g:indentLine_faster = 1
+let g:tex_conceal = ""
 
 "Lightline statusline config
 set laststatus=2

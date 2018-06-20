@@ -102,6 +102,9 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
+# Adding texlive path to PATH:
+#PATH=/usr/local/texlive/2018/bin/x86_64-linux:$PATH
+
 #Personal alias
 alias ll='ls -lh'
 alias la='ls -lah'
