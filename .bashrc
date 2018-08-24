@@ -87,11 +87,6 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# some more ls aliases
-#alias ll='ls -l'
-#alias la='ls -A'
-#alias l='ls -CF'
-
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
@@ -108,10 +103,12 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
-# Adding texlive path to PATH:
-#PATH=/usr/local/texlive/2018/bin/x86_64-linux:$PATH
-
 #Personal alias
 alias ll='ls -lh'
 alias la='ls -lah'
 alias fake_dhcp='sudo dnsmasq -d --log-dhcp --bind-dynamic --log-facility=- -i eth0 -F 10.0.0.100,10.0.0.200'
+
+# Source custom bashrc if it exists:
+if [ -f ~/.my_bashrc ]; then
+	. ~/.my_bashrc
+fi
