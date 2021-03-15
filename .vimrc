@@ -132,3 +132,4 @@ let g:lightline = {
       \ 'colorscheme': 'wombat',
       \ }
 
+set conceallevel=0
