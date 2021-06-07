@@ -4,6 +4,18 @@
 
 set nocompatible
 
+"___________________________
+" Vundle :
+filetype off
+set rtp+=~/.vim/vundle/Vundle.vim
+call vundle#begin('~/.vim/vundle')
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'psf/black'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+
 "____________________________
 " aspect
 syntax enable

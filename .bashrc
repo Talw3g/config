@@ -105,26 +105,11 @@ fi
 
 #Personal alias
 alias ll='ls -lh'
-alias la='ls -lah'
+alias la='ls -lAh'
 alias fake_dhcp='sudo dnsmasq -d --log-dhcp --bind-dynamic --log-facility=- -i eth0 -F 10.0.0.100,10.0.0.200'
 
 # Source custom bashrc if it exists:
 if [ -f ~/.my_bashrc ]; then
 	. ~/.my_bashrc
 fi
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/thibault/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/thibault/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/thibault/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/thibault/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 
