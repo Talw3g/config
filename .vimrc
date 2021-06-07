@@ -1,7 +1,6 @@
 " .vimrc
 " Thibault
 
-
 set nocompatible
 
 "___________________________
@@ -16,6 +15,10 @@ Plugin 'psf/black'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 27b386f (added vundle and black plugin)
 "____________________________
 " aspect
 syntax enable
