@@ -10,15 +10,15 @@ set rtp+=~/.vim/vundle/Vundle.vim
 call vundle#begin('~/.vim/vundle')
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'psf/black'
+Plugin 'dense-analysis/ale'
+Plugin 'posva/vim-vue'
+Plugin 'airblade/vim-gitgutter'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 27b386f (added vundle and black plugin)
 "____________________________
 " aspect
 syntax enable
@@ -43,7 +43,7 @@ autocmd BufNewfile,BufRead {SConstruct,SConscript,*.{c,cc,cpp,h,hpp,html,htm,php
 autocmd BufNewfile,BufRead {SConstruct,SConscript,*.{md}} set expandtab | set tabstop=4 | set shiftwidth=4
 autocmd BufNewfile,BufRead Makefile set noexpandtab
 autocmd BufNewfile,Bufread *.php let php_sql_query=1 | let php_baselib=1 | let php_htmlInStrings=1 | let php_parent_error_close=1 | let php_parent_error_open=1
-autocmd BufNewfile,BufRead {SConstruct,SConscript,*.{py}} cnoreab wc w<CR>:!python3 -m py_compile % | cnoreab b :Black<CR> :w <CR>
+autocmd BufNewfile,BufRead {SConstruct,SConscript,*.{py}} cnoreab wc w<CR>:!python3 -m py_compile %
 autocmd BufNewfile,BufRead {SConstruct,SConscript,*.{rs}} cnoreab wc w<CR>:!cargo build | cnoreab wr w<CR>:!cargo run
 autocmd BufNewfile,BufRead {SConstruct,SConscript,*.{tex}} cnoreab wc w<CR>:!pdflatex -interaction=nonstopmode % | cnoreab rr <CR>:! rm *.aux *.log *.out *.synctex.gz *.bbl *.blg *.dvi >/dev/null 2>&1 <CR> | nmap <C-d> di{| imap <C-d> <ESC>di{i| imap <UP> <ESC>gki| imap <DOWN> <ESC>gji
 
@@ -64,7 +64,7 @@ set foldlevel=12
 " miscs
 set history=50
 set mouse=r
-set fenc=latin1
+set fenc=utf-8
 
 "____________________________
 " completion
@@ -124,8 +124,7 @@ let Tlist_GainFocus_On_ToggleOpen = 1
 
 "____________________________
 " default colorscheme
-
-colorscheme smyck
+colorscheme wombat
 
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$/
@@ -148,3 +147,12 @@ let g:lightline = {
       \ }
 
 set conceallevel=0
+
+"____________________________
+"ALE :
+let g:ale_fixers = {
+\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+\   'javascript': ['eslint'],
+\   'python': ['isort','black'],
+\}
+let g:ale_python_flake8_options = '--max-line-length=88'
