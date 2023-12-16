@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-cp -u .bashrc .vimrc .gitconfig ~/
-cd ~/
-tar -xzvf config/vim.tar.gz
-
+mkdir -p ~/.config/nvim
+cp -u .bashrc .gitconfig ~/
+cp -u init.lua ~/.config/nvim/
+nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
