@@ -42,6 +42,8 @@ packer.startup(function()
     'j-hui/fidget.nvim',
     tag = 'legacy',
   }
+  
+  use 'averms/black-nvim'
 
   end
 )
@@ -63,15 +65,19 @@ vim.keymap.set('n', 'ù', '<Nop>');
 vim.g.mapleader = 'ù';
 vim.g.maplocalleader = 'ù';
 
-vim.keymap.set('n', '<F2>', '<Cmd>:split<CR>',{noremap = true})
-vim.keymap.set('n', '<F3>', '<Cmd>:vertical split<CR>',{noremap = true})
-vim.keymap.set('n', '<Space>', '<Cmd>:tab new<CR>',{noremap = true})
-vim.keymap.set('n', '<C-Left>', '<Cmd>:tabp<CR>',{noremap = true})
-vim.keymap.set('n', '<C-Right>', '<Cmd>:tabn<CR>',{noremap = true})
-vim.keymap.set('n', '<C-Up>', '<Cmd>:m .-2<CR>==',{noremap = true})
-vim.keymap.set('n', '<C-Down>', '<Cmd>:m .+1<CR>==',{noremap = true})
-vim.keymap.set('i', '<C-Up>', '<Cmd>:m .-2<CR>',{noremap = true})
-vim.keymap.set('i', '<C-Down>', '<Cmd>:m .+1<CR>',{noremap = true})
+vim.keymap.set('n', '<F2>', '<Cmd>:split<CR>')
+vim.keymap.set('n', '<F3>', '<Cmd>:vertical split<CR>')
+vim.keymap.set('n', '<Space>', '<Cmd>:tab new<CR>')
+vim.keymap.set('n', '<C-Left>', '<Cmd>:tabp<CR>')
+vim.keymap.set('n', '<C-Right>', '<Cmd>:tabn<CR>')
+vim.keymap.set('n', '<C-Up>', '<Cmd>:m .-2<CR>==')
+vim.keymap.set('n', '<C-Down>', '<Cmd>:m .+1<CR>==')
+vim.keymap.set('i', '<C-Up>', '<Cmd>:m .-2<CR>')
+vim.keymap.set('i', '<C-Down>', '<Cmd>:m .+1<CR>')
+vim.keymap.set({'n', 'i'}, '<A-Up>', '<Cmd>:wincmd k<CR>')
+vim.keymap.set({'n', 'i'}, '<A-Down>', '<Cmd>:wincmd j<CR>')
+vim.keymap.set({'n', 'i'}, '<A-Right>', '<Cmd>:wincmd l<CR>')
+vim.keymap.set({'n', 'i'}, '<A-Left>', '<Cmd>:wincmd h<CR>')
 
 
 vim.o.wildmode = "list:longest"
@@ -226,3 +232,8 @@ autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
 
 --require('monokai').setup { palette = require('monokai').soda }
 vim.cmd([[:colorscheme gruvbox-material ]])
+
+-- Black for python:
+vim.g.python3_host_prog = fn.expand('$HOME/.local/venv/nvim/bin/python')
+vim.g.black_line_length = 100
+vim.keymap.set({'n', 'i'}, '<C-q>', '<Cmd>:call Black()<CR>', { silent = true})
