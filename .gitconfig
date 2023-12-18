@@ -43,3 +43,7 @@
       textconv=odt2txt
 [init]
 	defaultBranch = master
+[safe]
+	directory = /opt/dosahub
+	directory = /opt/reparabilite
+	directory = /opt/ecod

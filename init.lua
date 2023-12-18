@@ -22,6 +22,12 @@ packer.startup(function()
   use 'williamboman/mason.nvim'
   use 'williamboman/mason-lspconfig.nvim'
 
+  use({
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    after = "nvim-treesitter",
+    requires = "nvim-treesitter/nvim-treesitter",
+  })
+
   use 'neovim/nvim-lspconfig'
   use 'simrat39/rust-tools.nvim'
 
@@ -44,6 +50,15 @@ packer.startup(function()
   }
   
   use 'averms/black-nvim'
+
+  use({
+      "kylechui/nvim-surround",
+      config = function()
+          require("nvim-surround").setup({
+              -- Configuration here, or leave empty to use defaults
+          })
+      end
+  })
 
   end
 )
@@ -234,6 +249,13 @@ autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
 vim.cmd([[:colorscheme gruvbox-material ]])
 
 -- Black for python:
+	--[[
+	mkdir -p ~/.local/venv && cd ~/.local/venv
+	python3 -m venv nvim
+	cd nvim
+	. ./bin/activate
+	pip install pynvim black
+	]]
 vim.g.python3_host_prog = fn.expand('$HOME/.local/venv/nvim/bin/python')
 vim.g.black_line_length = 100
 vim.keymap.set({'n', 'i'}, '<C-q>', '<Cmd>:call Black()<CR>', { silent = true})
