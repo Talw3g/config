@@ -13,7 +13,7 @@ local util = require'packer.util'
 packer.init({
   package_root = util.join_paths(vim.fn.stdpath('data'), 'site', 'pack')
 })
--- startup and add configure plugins
+
 packer.startup(function()
   local use = use
 
@@ -21,6 +21,7 @@ packer.startup(function()
 
   use 'williamboman/mason.nvim'
   use 'williamboman/mason-lspconfig.nvim'
+  use 'neovim/nvim-lspconfig'
 
   use({
     "nvim-treesitter/nvim-treesitter-textobjects",
@@ -28,7 +29,6 @@ packer.startup(function()
     requires = "nvim-treesitter/nvim-treesitter",
   })
 
-  use 'neovim/nvim-lspconfig'
   use 'simrat39/rust-tools.nvim'
 
   use 'sainnhe/gruvbox-material'
@@ -38,6 +38,7 @@ packer.startup(function()
     require("toggleterm").setup()
   end}
 
+  -- Needs ripgrep installed : sudo apt install ripgrep
   use {"nvim-telescope/telescope.nvim", tag = "0.1.2",
     requires = {{'nvim-lua/plenary.nvim'}}
   }
@@ -68,10 +69,10 @@ vim.o.ttyfast = true
 vim.o.wrap = false
 vim.o.incsearch = true
 vim.o.mouse = ""
-vim.o.tabstop = 4
-vim.o.softtabstop = 4
+vim.o.tabstop = 2
+vim.o.softtabstop = 2
 vim.o.expandtab = true
-vim.o.shiftwidth = 4
+vim.o.shiftwidth = 2
 vim.bo.autoindent = true
 vim.opt.updatetime = 750
 
@@ -83,8 +84,8 @@ vim.g.maplocalleader = 'ù';
 vim.keymap.set('n', '<F2>', '<Cmd>:split<CR>')
 vim.keymap.set('n', '<F3>', '<Cmd>:vertical split<CR>')
 vim.keymap.set('n', '<Space>', '<Cmd>:tab new<CR>')
-vim.keymap.set('n', '<C-Left>', '<Cmd>:tabp<CR>')
-vim.keymap.set('n', '<C-Right>', '<Cmd>:tabn<CR>')
+vim.keymap.set({'n', 'i'}, '<C-Left>', '<Cmd>:tabp<CR>')
+vim.keymap.set({'n', 'i'}, '<C-Right>', '<Cmd>:tabn<CR>')
 vim.keymap.set('n', '<C-Up>', '<Cmd>:m .-2<CR>==')
 vim.keymap.set('n', '<C-Down>', '<Cmd>:m .+1<CR>==')
 vim.keymap.set('i', '<C-Up>', '<Cmd>:m .-2<CR>')
@@ -104,55 +105,25 @@ require("mason").setup({
         }
     }
 })
-require("mason-lspconfig").setup()
+require("mason-lspconfig").setup {
+    ensure_installed = {
+      "pylsp",
+    },
+    automatic_installation = true,
+}
 
--- homemade show hex / bin
-vim.api.nvim_create_autocmd({"CursorMoved"}, {
-    callback = function(ev)
-        local function matchstr(...)
-            local ok,ret = pcall(fn.matchstr, ...)
-            return ok and ret or ""
-        end
-        local column = vim.api.nvim_win_get_cursor(0)[2]
-        local line = vim.api.nvim_get_current_line()
-        
-        local left = matchstr(line:sub(1, column+1), [[[0-9a-fx]*$]])
-        local right = matchstr(line:sub(column+1), [[^[0-9a-fx]*]]):sub(2)
-        
-        local cword = left .. right
-       
-        v = tonumber(cword)
-        if v == nil then
-            vim.g.my_hex_infos = ''
-        else
-            if v <= 0xffff then
-                hex2bin = {
-                    ['0'] = '0000', ['1'] = '0001', ['2'] = '0010', ['3'] = '0011',
-                    ['4'] = '0100', ['5'] = '0101', ['6'] = '0110', ['7'] = '0111',
-                    ['8'] = '1000', ['9'] = '1001', ['a'] = '1010', ['b'] = '1011',
-                    ['c'] = '1100', ['d'] = '1101', ['e'] = '1110', ['f'] = '1111',
-                }
-                local hex = string.format("%x", v);
-                local bin = "";
-                for i = 1, #hex do
-                    local c = hex:sub(i,i)
-                    if bin == '' then
-                        bin = hex2bin[c]
-                    else
-                        bin = bin .. '_' .. hex2bin[c]
-                    end
-                end
-
-                vim.g.my_hex_infos = string.format("%d 0x%s %s", v, hex, bin)
-            else 
-                vim.g.my_hex_infos = string.format("%d 0x%x", v, v)
-            end
-        end
-        -- 0x42 45 129321 02193210 0x0000
-    end
-})
-
--- 123213
+-- nvim LSP config
+require'lspconfig'.pylsp.setup{
+  settings = {
+    pylsp = {
+      plugins = {
+        black = {
+          line_length = 100
+        }
+      }
+    }
+  }
+}
 
 -- status line
 require('lualine').setup({
@@ -186,6 +157,37 @@ rt.setup({
     }
 })
 
+-- Use LspAttach autocommand to only map the following keys
+-- after the language server attaches to the current buffer
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+    -- Buffer local mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts)
+    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<space>f', function()
+      vim.lsp.buf.format { async = true }
+    end, opts)
+  end,
+})
+
 -- LSP Diagnostics Options Setup
 vim.diagnostic.config({
     virtual_text = false,
@@ -203,8 +205,9 @@ vim.diagnostic.config({
 
 -- use TAB to go to next LSP diagnostic
 vim.keymap.set("n", "<Tab>", vim.diagnostic.goto_next, {})
+vim.keymap.set("n", "<S-Tab>", vim.diagnostic.goto_prev, {})
 -- use F4 to go to definition
-vim.keymap.set("n", "<F4>", vim.lsp.buf.declaration, {})
+--vim.keymap.set("n", "<F4>", vim.lsp.buf.declaration, {})
 
 
 vim.g.rustfmt_autosave = 1
@@ -248,14 +251,3 @@ autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
 --require('monokai').setup { palette = require('monokai').soda }
 vim.cmd([[:colorscheme gruvbox-material ]])
 
--- Black for python:
-	--[[
-	mkdir -p ~/.local/venv && cd ~/.local/venv
-	python3 -m venv nvim
-	cd nvim
-	. ./bin/activate
-	pip install pynvim black
-	]]
-vim.g.python3_host_prog = fn.expand('$HOME/.local/venv/nvim/bin/python')
-vim.g.black_line_length = 100
-vim.keymap.set({'n', 'i'}, '<C-q>', '<Cmd>:call Black()<CR>', { silent = true})
