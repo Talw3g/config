@@ -22,6 +22,10 @@ packer.startup(function()
   use 'williamboman/mason.nvim'
   use 'williamboman/mason-lspconfig.nvim'
   use 'neovim/nvim-lspconfig'
+  use 'nvimtools/none-ls.nvim'
+	use 'hrsh7th/nvim-cmp'
+	use 'hrsh7th/cmp-nvim-lsp'
+  use 'WhoIsSethDaniel/mason-tool-installer.nvim'
 
   use({
     "nvim-treesitter/nvim-treesitter-textobjects",
@@ -49,8 +53,6 @@ packer.startup(function()
     'j-hui/fidget.nvim',
     tag = 'legacy',
   }
-  
-  use 'averms/black-nvim'
 
   use({
       "kylechui/nvim-surround",
@@ -98,6 +100,29 @@ vim.keymap.set({'n', 'i'}, '<A-Left>', '<Cmd>:wincmd h<CR>')
 
 vim.o.wildmode = "list:longest"
 
+local servers = {
+  pylsp = {
+    pylsp = {
+        plugins = {
+          pycodestyle = {
+            ignore = {'E266', 'W503', 'W504'},
+            maxLineLength = 100
+          },
+          autopep8 = {
+            enabled = false,
+          },
+          yapf = {
+            enabled = false,
+            column_limit = 100,
+          },
+        }
+    }
+  },
+}
+-- nvim-cmp supports additional completion capabilities, so broadcast that to servers
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+
 -- Mason Setup
 require("mason").setup({
     ui = {
@@ -105,25 +130,38 @@ require("mason").setup({
         }
     }
 })
-require("mason-lspconfig").setup {
-    ensure_installed = {
-      "pylsp",
-    },
-    automatic_installation = true,
+-- Ensure the servers above are installed
+local mason_lspconfig = require 'mason-lspconfig'
+
+mason_lspconfig.setup {
+  ensure_installed = vim.tbl_keys(servers),
+	automatic_installation = true,
 }
 
--- nvim LSP config
-require'lspconfig'.pylsp.setup{
-  settings = {
-    pylsp = {
-      plugins = {
-        black = {
-          line_length = 100
-        }
-      }
+mason_lspconfig.setup_handlers {
+  function(server_name)
+    require('lspconfig')[server_name].setup {
+      capabilities = capabilities,
+      settings = servers[server_name],
     }
-  }
+  end,
 }
+
+require('mason-tool-installer').setup({
+    ensure_installed = {
+        'prettierd',
+        'black',
+        'isort',
+    },
+})
+local null_ls = require("null-ls")
+null_ls.setup({
+  sources = {
+    null_ls.builtins.formatting.isort,
+    null_ls.builtins.formatting.black,
+    null_ls.builtins.formatting.prettierd,
+  }
+})
 
 -- status line
 require('lualine').setup({
@@ -173,16 +211,16 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
-    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
-    vim.keymap.set('n', '<space>wl', function()
+    vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<Leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<Leader>wl', function()
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, opts)
-    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
-    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', '<Leader>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<Leader>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<Leader>ca', vim.lsp.buf.code_action, opts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', '<space>f', function()
+    vim.keymap.set('n', '<Leader>f', function()
       vim.lsp.buf.format { async = true }
     end, opts)
   end,
