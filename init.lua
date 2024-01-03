@@ -149,7 +149,7 @@ mason_lspconfig.setup_handlers {
 
 require('mason-tool-installer').setup({
     ensure_installed = {
-        'prettierd',
+--        'prettierd',
         'black',
         'isort',
     },
