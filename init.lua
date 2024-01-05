@@ -51,7 +51,7 @@ packer.startup(function()
 
   use {
     'j-hui/fidget.nvim',
-    tag = 'legacy',
+    tag = 'Legacy',
   }
 
   use({
@@ -62,6 +62,8 @@ packer.startup(function()
           })
       end
   })
+
+  use 'lewis6991/gitsigns.nvim'
 
   end
 )
@@ -273,7 +275,7 @@ function my_find_files()
     return require('telescope.builtin').find_files({cwd="~"})
 end
 -- XXX C-o conflict with go back in jump list
---vim.keymap.set("n", "<C-o>", my_find_files, {})
+-- vim.keymap.set("n", "<C-o>", my_find_files, {})
 
 vim.keymap.set("n", "<C-l>", require('telescope.builtin').diagnostics, {})
 
@@ -289,3 +291,14 @@ autocmd CursorHold * lua vim.diagnostic.open_float(nil, { focusable = false })
 --require('monokai').setup { palette = require('monokai').soda }
 vim.cmd([[:colorscheme gruvbox-material ]])
 
+-- Gitsigns
+require('gitsigns').setup({
+  signs = {
+    add          = { text = '+' },
+    change       = { text = '~' },
+    delete       = { text = '_' },
+    topdelete    = { text = '‾' },
+    changedelete = { text = '~' },
+    untracked    = { text = '┆' },
+  },
+})
