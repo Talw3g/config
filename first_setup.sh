@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 sudo apt-get update
-sudo apt-get install software-properties-common python3-dev python3-pip
+sudo apt-get install software-properties-common python3-dev python3-pip python3-venv
 sudo add-apt-repository ppa:neovim-ppa/unstable
 sudo apt-get update
 sudo apt-get install neovim
